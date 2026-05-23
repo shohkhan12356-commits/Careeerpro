@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ProCommunity - Professional Network</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #0f172a;
+            --secondary: #1e293b;
+            --accent: #3b82f6;
+            --accent-light: #60a5fa;
+            --text-primary: #f1f5f9;
+            --text-secondary: #cbd5e1;
+            --text-muted: #94a3b8;
+            --bg-card: #1e293b;
+            --border: #334155;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, var(--primary) 0%, #1a2332 100%);
+            background-attachment: fixed;
+            color: var(--text-primary);
+            min-height: 100vh;
+        }
+
+        .app-container {
+            display: grid;
+            grid-template-columns: 280px 1fr 360px;
+            gap: 20px;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .sidebar {
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid var(--border);
+            height: fit-content;
+            position: sticky;
+            top: 20px;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 800;
+            margin-bottom: 30px;
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            color: var(--text-secondary);
+            font-weight: 500;
+            transition: all 0.3s ease;
+            margin-bottom: 8px;
+        }
+
+        .nav-item:hover {
+            background: rgba(59, 130, 246, 0.1);
+            color: var(--accent);
+        }
+
+        .nav-item.active {
+            background: rgba(59, 130, 246, 0.2);
+            color: var(--accent);
+        }
+
+        .feed {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .composer {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+        }
+
+        .composer-header {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: white;
+        }
+
+        .composer-input {
+            flex: 1;
+            background: rgba(59, 130, 246, 0.05);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            border-radius: 8px;
+            padding: 12px 16px;
+            color: var(--text-primary);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .composer-input:focus {
+            outline: none;
+            border-color: var(--accent);
+            background: rgba(59, 130, 246, 0.1);
+        }
+
+        .post {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .post:hover {
+            border-color: var(--accent);
+            box-shadow: 0 10px 30px rgba(59, 130, 246, 0.1);
+        }
+
+        .post-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 16px;
+        }
+
+        .post-author {
+            display: flex;
+            gap: 12px;
+        }
+
+        .author-info h3 {
+            font-size: 1rem;
+            margin-bottom: 4px;
+        }
+
+        .post-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            background: rgba(59, 130, 246, 0.2);
+            color: var(--accent);
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-left: 8px;
+        }
+
+        .post-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .post-content {
+            color: var(--text-secondary);
+            margin-bottom: 16px;
+            line-height: 1.6;
+        }
+
+        .post-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .tag {
+            background: rgba(59, 130, 246, 0.1);
+            color: var(--accent-light);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+        }
+
+        .post-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .action-btn {
+            flex: 1;
+            padding: 10px;
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .action-btn:hover {
+            background: rgba(59, 130, 246, 0.1);
+            color: var(--accent);
+            border-color: var(--accent);
+        }
+
+        .right-sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .widget {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+        }
+
+        .widget-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .group-item {
+            padding: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-bottom: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .group-item:hover {
+            background: rgba(59, 130, 246, 0.1);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 40px;
+            width: 90%;
+            max-width: 500px;
+            border: 1px solid var(--border);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .modal-header h2 {
+            font-size: 1.5rem;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            background: rgba(59, 130, 246, 0.05);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-family: inherit;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--accent);
+            background: rgba(59, 130, 246, 0.1);
+        }
+
+        .btn {
+            padding: 10px 24px;
+            border-radius: 8px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%);
+            color: white;
+            width: 100%;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(59, 130, 246, 0.3);
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #10b981;
+            color: white;
+            padding: 16px 24px;
+            border-radius: 8px;
+            z-index: 999;
+        }
+
+        @media (max-width: 1400px) {
+            .app-container {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar,
+            .right-sidebar {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- SIGNUP MODAL -->
+    <div class="modal active" id="signupModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Welcome to ProCommunity</h2>
+                <button class="close-btn" onclick="closeSignup()">✕</button>
+            </div>
+            <form onsubmit="signup(event)">
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <input type="text" id="nameInput" placeholder="John Doe" required>
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="emailInput" placeholder="john@example.com" required>
+                </div>
+                <div class="form-group">
+                    <label>Professional Field</label>
+                    <select id="fieldInput" required>
+                        <option value="">Select your field...</option>
+                        <option value="Investment Banking">Investment Banking</option>
+                        <option value="Engineering">Engineering</option>
+                        <option value="Medicine">Medicine</option>
+                        <option value="Entrepreneurship">Entrepreneurship</option>
+                        <option value="Venture Capital">Venture Capital</option>
+                        <option value="Consulting">Consulting</option>
+                        <option value="Data Science">Data Science</option>
+                        <option value="Product Management">Product Management</option>
+                        <option value="Law">Law</option>
+                        <option value="Finance">Finance</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Years of Experience</label>
+                    <input type="number" id="experienceInput" placeholder="2" min="0" max="70" required>
+                </div>
+                <button type="submit" class="btn">Create Account</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- MAIN APP -->
+    <div class="app-container hidden" id="mainApp">
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
+            <div class="logo">📱 Pro</div>
+            
+            <div class="nav-item active" onclick="switchView('feed')">
+                <span>🏠 Home Feed</span>
+            </div>
+            <div class="nav-item" onclick="switchView('explore')">
+                <span>🔍 Explore</span>
+            </div>
+            <div class="nav-item" onclick="switchView('messages')">
+                <span>💬 Messages</span>
+            </div>
+
+            <div style="margin: 30px 0 0; padding: 30px 0 0; border-top: 1px solid var(--border);">
+                <div style="font-size: 0.75rem; text-transform: uppercase; color: var(--text-muted); margin-bottom: 12px;">Groups</div>
+                <div class="nav-item" onclick="switchView('group', 'Investment Banking')">
+                    💰 Investment Banking
+                </div>
+                <div class="nav-item" onclick="switchView('group', 'Engineering')">
+                    ⚙️ Engineering
+                </div>
+                <div class="nav-item" onclick="switchView('group', 'Medicine')">
+                    ⚕️ Medicine
+                </div>
+                <div class="nav-item" onclick="switchView('group', 'Entrepreneurship')">
+                    🚀 Entrepreneurship
+                </div>
+            </div>
+
+            <div style="margin: 30px 0 0; padding: 30px 0 0; border-top: 1px solid var(--border);">
+                <div class="nav-item" onclick="switchView('profile')">
+                    👤 Profile
+                </div>
+                <div class="nav-item" onclick="logout()">
+                    🚪 Logout
+                </div>
+            </div>
+        </aside>
+
+        <!-- MAIN FEED -->
+        <main class="feed">
+            <h2 id="feedTitle">Your Feed</h2>
+
+            <!-- COMPOSER -->
+            <div class="composer">
+                <div class="composer-header">
+                    <div class="user-avatar" id="userInitial">JD</div>
+                    <input 
+                        type="text" 
+                        class="composer-input" 
+                        id="postTitle"
+                        placeholder="Share your thoughts, ask for advice..."
+                        onclick="expandComposer()"
+                    >
+                </div>
+                <div id="expandedComposer" class="hidden">
+                    <div class="form-group">
+                        <textarea 
+                            class="composer-input" 
+                            id="postContent" 
+                            placeholder="Write your detailed post here..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Tags (comma-separated)</label>
+                        <input type="text" id="postTags" placeholder="e.g., career, advice, question">
+                    </div>
+                    <div class="form-group">
+                        <label>Category</label>
+                        <select id="postCategory">
+                            <option value="General">General Discussion</option>
+                            <option value="Career">Career Advice</option>
+                            <option value="Learning">Learning Resources</option>
+                            <option value="Jobs">Job Opportunities</option>
+                            <option value="Collaboration">Collaboration</option>
+                        </select>
+                    </div>
+                    <button class="btn" onclick="publishPost()">Publish Post</button>
+                </div>
+            </div>
+
+            <!-- POSTS FEED -->
+            <div id="postsContainer"></div>
+        </main>
+
+        <!-- RIGHT SIDEBAR -->
+        <aside class="right-sidebar">
+            <div class="widget">
+                <div class="widget-title">🔥 Trending Groups</div>
+                <div class="group-item">💰 Investment Banking - 8,942 members</div>
+                <div class="group-item">🚀 Entrepreneurship - 12,450 members</div>
+                <div class="group-item">⚙️ Engineering - 15,623 members</div>
+                <div class="group-item">⚕️ Medicine - 9,234 members</div>
+            </div>
+
+            <div class="widget">
+                <div class="widget-title">📈 Trending Topics</div>
+                <div class="group-item">#CareerGrowth</div>
+                <div class="group-item">#StartupLife</div>
+                <div class="group-item">#Networking</div>
+                <div class="group-item">#MentorshipMatters</div>
+            </div>
+
+            <div class="widget">
+                <div class="widget-title">💬 Messages</div>
+                <div class="group-item">Sarah Chen - Great insights!</div>
+                <div class="group-item">Alex Kumar - Thanks for the referral!</div>
+                <div class="group-item">Emma Wilson - Let's discuss startup...</div>
+            </div>
+        </aside>
+    </div>
+
+    <script>
+        let currentUser = null;
+        let posts = [];
+
+        const mockUsers = [
+            { name: 'Sarah Chen', field: 'Investment Banking', years: 5, avatar: 'SC' },
+            { name: 'Alex Kumar', field: 'Engineering', years: 3, avatar: 'AK' },
+            { name: 'Emma Wilson', field: 'Entrepreneurship', years: 7, avatar: 'EW' },
+            { name: 'David Park', field: 'Medicine', years: 4, avatar: 'DP' },
+        ];
+
+        const mockPosts = [
+            {
+                id: 1,
+                author: mockUsers[0],
+                title: 'Key Insights from Recent M&A Transactions',
+                content: 'Just completed analysis on 15 major M&A deals. Valuation multiples are stabilizing, deal cycles are shorter, and due diligence is more tech-focused.',
+                category: 'Career',
+                tags: ['M&A', 'Finance', 'Analysis'],
+                timestamp: '2 hours ago',
+                likes: 342
+            },
+            {
+                id: 2,
+                author: mockUsers[1],
+                title: 'The Future of AI in Engineering',
+                content: 'Machine learning pipelines are becoming standard. What skills should engineers prioritize? I\'m seeing demand surge for ML infrastructure.',
+                category: 'Learning',
+                tags: ['AI', 'Engineering'],
+                timestamp: '5 hours ago',
+                likes: 521
+            },
+            {
+                id: 3,
+                author: mockUsers[2],
+                title: 'Scaling Beyond MVP - Founder\'s Journey',
+                content: 'We just hit $1M ARR! But the real challenge starts now. Hiring, fundraising, pivoting GTM. For founders - what were your biggest bottlenecks?',
+                category: 'Collaboration',
+                tags: ['Startup', 'Growth'],
+                timestamp: '8 hours ago',
+                likes: 894
+            }
+        ];
+
+        function signup(e) {
+            e.preventDefault();
+            const name = document.getElementById('nameInput').value;
+            const field = document.getElementById('fieldInput').value;
+            const experience = document.getElementById('experienceInput').value;
+
+            currentUser = {
+                name,
+                field,
+                experience,
+                avatar: name.split(' ').map(n => n[0]).join('').toUpperCase()
+            };
+
+            document.getElementById('userInitial').textContent = currentUser.avatar;
+            document.getElementById('signupModal').classList.remove('active');
+            document.getElementById('mainApp').classList.remove('hidden');
+            renderPosts();
+            showNotification('Welcome! 🎉');
+        }
+
+        function closeSignup() {
+            currentUser = { name: 'Guest User', avatar: 'GU', field: 'General', experience: 0 };
+            document.getElementById('signupModal').classList.remove('active');
+            document.getElementById('mainApp').classList.remove('hidden');
+            document.getElementById('userInitial').textContent = 'GU';
+            renderPosts();
+        }
+
+        function expandComposer() {
+            document.getElementById('expandedComposer').classList.remove('hidden');
+        }
+
+        function publishPost() {
+            const title = document.getElementById('postTitle').value;
+            const content = document.getElementById('postContent').value;
+            const tags = document.getElementById('postTags').value.split(',').map(t => t.trim());
+            const category = document.getElementById('postCategory').value;
+
+            if (!title.trim()) {
+                showNotification('Title is required!');
+                return;
+            }
+
+            const newPost = {
+                id: posts.length + mockPosts.length + 1,
+                author: currentUser,
+                title,
+                content: content || title,
+                category,
+                tags,
+                timestamp: 'just now',
+                likes: 0
+            };
+
+            posts.unshift(newPost);
+            document.getElementById('postTitle').value = '';
+            document.getElementById('postContent').value = '';
+            document.getElementById('postTags').value = '';
+            document.getElementById('expandedComposer').classList.add('hidden');
+            renderPosts();
+            showNotification('Post published! 🚀');
+        }
+
+        function renderPosts() {
+            const container = document.getElementById('postsContainer');
+            const allPosts = [...posts, ...mockPosts];
+            
+            container.innerHTML = allPosts.map(post => `
+                <div class="post">
+                    <div class="post-header">
+                        <div class="post-author">
+                            <div class="user-avatar">${post.author.avatar}</div>
+                            <div>
+                                <h3>${post.author.name}<span class="post-badge">${post.author.field}</span></h3>
+                                <div style="font-size: 0.85rem; color: var(--text-muted);">${post.category} • ${post.timestamp}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="post-title">${post.title}</div>
+                    <div class="post-content">${post.content}</div>
+                    <div class="post-tags">
+                        ${post.tags.map(tag => `<span class="tag">#${tag}</span>`).join('')}
+                    </div>
+                    <div class="post-actions">
+                        <button class="action-btn" onclick="likePost(${post.id})">👍 Like (${post.likes})</button>
+                        <button class="action-btn" onclick="commentPost(${post.id})">💬 Comment</button>
+                        <button class="action-btn" onclick="sharePost(${post.id})">🔄 Share</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function switchView(view, group = null) {
+            const title = document.getElementById('feedTitle');
+            if (group) title.textContent = `${group} Community`;
+            else if (view === 'feed') title.textContent = 'Your Feed';
+            else if (view === 'explore') title.textContent = 'Explore Communities';
+            else if (view === 'messages') title.textContent = 'Messages';
+            renderPosts();
+        }
+
+        function likePost(postId) {
+            showNotification('❤️ Post liked!');
+        }
+
+        function commentPost(postId) {
+            showNotification('💬 Comment feature available!');
+        }
+
+        function sharePost(postId) {
+            showNotification('🔄 Shared!');
+        }
+
+        function logout() {
+            currentUser = null;
+            posts = [];
+            document.getElementById('mainApp').classList.add('hidden');
+            document.getElementById('signupModal').classList.add('active');
+        }
+
+        function showNotification(message) {
+            const notification = document.createElement('div');
+            notification.className = 'notification';
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            setTimeout(() => notification.remove(), 3000);
+        }
+    </script>
+</body>
+</html>
